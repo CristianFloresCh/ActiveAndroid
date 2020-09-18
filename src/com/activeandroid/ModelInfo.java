@@ -29,6 +29,7 @@ import java.util.Map;
 
 import android.content.Context;
 
+import com.activeandroid.serializer.BigDecimalSerializer;
 import com.activeandroid.serializer.CalendarSerializer;
 import com.activeandroid.serializer.SqlDateSerializer;
 import com.activeandroid.serializer.TypeSerializer;
@@ -50,6 +51,8 @@ final class ModelInfo {
 			put(java.sql.Date.class, new SqlDateSerializer());
 			put(java.util.Date.class, new UtilDateSerializer());
 			put(java.io.File.class, new FileSerializer());
+			//Fix BigDecimal
+			put(java.math.BigDecimal.class, new BigDecimalSerializer());
 		}
 	};
 
@@ -78,7 +81,11 @@ final class ModelInfo {
 		return mTableInfos.values();
 	}
 
+	//Fix https://github.com/pardom-zz/ActiveAndroid/pull/462/commits/8664b46441a5bb61f6cceb73fc7bea0ca7a6ce96
 	public TableInfo getTableInfo(Class<? extends Model> type) {
+		if(!mTableInfos.containsKey(type)){
+			mTableInfos.put(type, new TableInfo(type));
+		}
 		return mTableInfos.get(type);
 	}
 
