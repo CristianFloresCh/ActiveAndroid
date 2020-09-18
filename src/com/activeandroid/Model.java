@@ -155,7 +155,10 @@ public abstract class Model {
 			mId = db.insert(mTableInfo.getTableName(), null, values);
 		}
 		else {
-			db.update(mTableInfo.getTableName(), values, idName+"=" + mId, null);
+			int updated = db.update(mTableInfo.getTableName(), values, idName+"=" + mId, null);
+			if(updated == 0) {
+				mId = db.insert(mTableInfo.getTableName(), null, values);
+			}
 		}
 
 		Cache.getContext().getContentResolver()
