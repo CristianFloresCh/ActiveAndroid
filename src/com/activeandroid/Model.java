@@ -18,14 +18,15 @@ package com.activeandroid;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.activeandroid.serializer.TypeSerializer;
+import com.activeandroid.sqlbrite.BriteDatabase;
 import com.activeandroid.util.Log;
 import com.activeandroid.util.ReflectionUtils;
+import com.google.gson.annotations.SerializedName;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ public abstract class Model {
 	// PRIVATE MEMBERS
 	//////////////////////////////////////////////////////////////////////////////////////
 
+    @SerializedName("id")
 	private Long mId = null;
 
 	private final TableInfo mTableInfo;
@@ -63,7 +65,14 @@ public abstract class Model {
 		return mId;
 	}
 
-	public final void delete() {
+    public void setId(Long id) {
+        this.mId = id;
+    }
+
+	public static <T extends Model> List<T> getAll(Class<T> var0) {
+		return (new Select()).from(var0).execute();
+	}
+    public final void delete() {
 		Cache.openDatabase().delete(mTableInfo.getTableName(), idName+"=?", new String[] { getId().toString() });
 		Cache.removeEntity(this);
 
@@ -71,8 +80,8 @@ public abstract class Model {
 				.notifyChange(ContentProvider.createUri(mTableInfo.getType(), mId), null);
 	}
 
-	public final Long save() {
-		final SQLiteDatabase db = Cache.openDatabase();
+	public Long save() {
+		final BriteDatabase db = Cache.openDatabase();
 		final ContentValues values = new ContentValues();
 
 		for (Field field : mTableInfo.getFields()) {
@@ -152,13 +161,13 @@ public abstract class Model {
 		}
 
 		if (mId == null) {
-			mId = db.insert(mTableInfo.getTableName(), null, values);
+			mId = db.insert(mTableInfo.getTableName(), values);
 		}
 		else {
 			int updated = db.update(mTableInfo.getTableName(), values, idName+"=" + mId, null);
-			if(updated == 0) {
-				mId = db.insert(mTableInfo.getTableName(), null, values);
-			}
+            if(updated == 0) {
+                mId = db.insert(mTableInfo.getTableName(), values);
+            }
 		}
 
 		Cache.getContext().getContentResolver()
