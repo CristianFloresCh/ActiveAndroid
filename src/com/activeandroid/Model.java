@@ -26,6 +26,7 @@ import com.activeandroid.query.Select;
 import com.activeandroid.serializer.TypeSerializer;
 import com.activeandroid.util.Log;
 import com.activeandroid.util.ReflectionUtils;
+import com.google.gson.annotations.SerializedName;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
