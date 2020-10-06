@@ -205,12 +205,18 @@ final class ModelInfo {
 			catch (ClassNotFoundException e) {
 				Log.e("Couldn't create class.", e);
 			}
+			catch(NoClassDefFoundError e) {
+					Log.e("Couldn't create class.", e);
+				}
 			catch (InstantiationException e) {
 				Log.e("Couldn't instantiate TypeSerializer.", e);
 			}
 			catch (IllegalAccessException e) {
 				Log.e("IllegalAccessException", e);
 			}
+			catch (Throwable any) {                           
+					Log.e("Couldn't create class.", any);
+			   }
 		}
 	}
 }

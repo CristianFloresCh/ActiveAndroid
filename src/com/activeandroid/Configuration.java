@@ -288,9 +288,15 @@ public class Configuration {
 						modelClasses.add(modelClass);
 					}
 				}
+				catch(NoClassDefFoundError e) {
+					Log.e("Couldn't create class.", e);
+				}
 				catch (ClassNotFoundException e) {
 					Log.e("Couldn't create class.", e);
 				}
+				catch (Throwable any) {                           
+					Log.e("Couldn't create class.", any);
+			   }
 			}
 
 			return modelClasses;

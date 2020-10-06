@@ -68,8 +68,8 @@ public abstract class Model {
         this.mId = id;
     }
 
-	public static <T extends Model> List<T> getAll(Class<T> var0) {
-		return (new Select()).from(var0).execute();
+	public static <T extends Model> List<T> getAll(Class<T> type) {
+		return (new Select()).from(type).execute();
 	}
 	
 	public final void delete() {
@@ -224,7 +224,7 @@ public abstract class Model {
 					value = cursor.getInt(columnIndex);
 				}
 				else if (fieldType.equals(Short.class) || fieldType.equals(short.class)) {
-					value = cursor.getInt(columnIndex);
+					value = cursor.getShort(columnIndex);
 				}
 				else if (fieldType.equals(Integer.class) || fieldType.equals(int.class)) {
 					value = cursor.getInt(columnIndex);

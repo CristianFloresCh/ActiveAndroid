@@ -33,6 +33,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -403,4 +404,13 @@ public final class SQLiteUtils {
 
 		return sl;
 	}
+
+  public static void addArguments(Collection<Object> argumentList, Object[] newArguments) {
+    for (Object arg : newArguments) {
+        if (arg.getClass() == boolean.class || arg.getClass() == Boolean.class) {
+            arg = (arg.equals(true) ? 1 : 0);
+        }
+        argumentList.add(arg);
+    }
+  }
 }
